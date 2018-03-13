@@ -1,18 +1,13 @@
 import akka.actor.Actor
-import net.liftweb.json.JInt
-import net.liftweb.json._
 
-import scalaj.http._
+import scalaj.http.Http
 
 class Worker extends Actor {
   override def receive: Receive = {
-    case StartTask(url) =>
-      val content = scala.io.Source.fromURL(url)
+    case FetchDelays(url) =>
+      println(url)
       val rawJson = Http(url).asString.body
-
-      val stops = parse(rawJson)
-        .children
-        .head \ "stops" \ "stopId" \ classOf[JInt]
-      stops.foreach(println)
+      val id = url.split("=").last
+      if (id == 35640 ) print(rawJson)
   }
 }
