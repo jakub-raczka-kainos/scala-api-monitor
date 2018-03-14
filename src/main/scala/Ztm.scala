@@ -6,7 +6,7 @@ import net.liftweb.json._
 import scalaj.http._
 
 class Ztm extends Actor {
-  val workerActors = context.actorOf(Props[Worker].withRouter(BalancingPool(100)), name = "WorkerActors")
+  val workerActors = context.actorOf(Props[Worker].withDispatcher("my-blocking-dispatcher").withRouter(BalancingPool(16)), name = "WorkerActors")
 
   override def receive: Receive = {
     case StartTask(url) =>
