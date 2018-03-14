@@ -9,13 +9,13 @@ object Master extends App {
 
 
   import system.dispatcher
-//  val cancellable = system.scheduler.schedule (
-//    0 milliseconds,
-//    10000 milliseconds,
-//    actor,
-//    StartTask(stops_url))
+  val cancellable = system.scheduler.schedule (
+    0 milliseconds,
+    10000 milliseconds,
+    actor,
+    StartTask(stops_url))
 
-  system.scheduler.scheduleOnce(50 milliseconds) {
-    actor ! StartTask(stops_url)
-  }
+//  system.scheduler.scheduleOnce(50 milliseconds) {
+//    actor ! StartTask(stops_url)
+//  }
 }
