@@ -17,7 +17,7 @@ class Ztm extends Actor {
 //      println("Stops" + stops.length)
 
       val delays_url_prefix = "http://87.98.237.99:88/delays?stopId="
-      val workerActors = context.actorOf(Props[Worker].withRouter(RoundRobinPool(10)), name = "WorkerActors")
+      val workerActors = context.actorOf(Props[Worker].withRouter(RoundRobinPool(100)), name = "WorkerActors")
       stops.foreach( id => workerActors ! FetchDelays(delays_url_prefix + id))
   }
 }
