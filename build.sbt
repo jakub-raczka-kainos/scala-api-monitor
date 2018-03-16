@@ -4,9 +4,14 @@ version := "0.1"
 
 scalaVersion := "2.12.4"
 
+
+libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % "2.5.11" % Test
+
 libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.0.11"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-http-testkit" % "10.0.11" % "test"
+
+//libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % "2.4.0" % "test"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 

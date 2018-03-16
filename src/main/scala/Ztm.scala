@@ -6,10 +6,10 @@ import net.liftweb.json._
 import scalaj.http._
 
 class Ztm extends Actor {
-
+  var successCount = 0
   val workerActors = context.actorOf(Props[Worker]
     .withDispatcher("my-blocking-dispatcher")
-    .withRouter(BalancingPool(16)), name = "WorkerActors")
+    .withRouter(BalancingPool(10)), name = "WorkerActors")
 
   override def receive: Receive = {
     case StartTask(url) =>
@@ -24,5 +24,13 @@ class Ztm extends Actor {
       val delays_url_prefix = ConfigFactory.load("application.conf").getString("urls.delays_url_prefix")
 
       stops.foreach( id => workerActors ! FetchDelays(delays_url_prefix + id))
+      sender() ! "Started Task"
+
+
+    case TaskSuccess(message) =>
+      successCount+=1
+        //println(message)
+     println(message + " "+successCount)
+
   }
 }

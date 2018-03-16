@@ -3,6 +3,9 @@ import akka.actor.Actor
 import scalaj.http.Http
 
 class Worker extends Actor {
+
+  var successCount = 0
+
   override def receive: Receive = {
     case FetchDelays(url) =>
       val id = url.split("=").last
@@ -20,9 +23,11 @@ class Worker extends Actor {
          }""".stripMargin
 
         println(wrapper)
-
+        sender() ! TaskSuccess("success "+ successCount+ " mainCount")
+        successCount+=1
       } catch {
         case e:java.net.SocketTimeoutException => println("BAD ID: " + id)
+
       }
 
   }
