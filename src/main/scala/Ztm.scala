@@ -7,22 +7,25 @@ import scalaj.http._
 
 class Ztm extends Actor {
 
+  var stops: List[Int]  = Nil
+  val conf = context.system.settings.config
   val workerActors = context.actorOf(Props[Worker]
     .withDispatcher("my-blocking-dispatcher")
-    .withRouter(BalancingPool(16)), name = "WorkerActors")
+    .withRouter(BalancingPool(20)), name = "WorkerActors")
 
   override def receive: Receive = {
-    case StartTask(url) =>
-      val rawJson = Http(url).asString.body
+    case FetchStops =>
+      val rawJson = Http(conf.getString("urls.stops_url")).asString.body
 
-      val stops = parse(rawJson)
+      stops = (parse(rawJson)
         .children
-        .head \ "stops" \ "stopId" \ classOf[JInt]
-//      stops.foreach(println)
-//      println("Stops" + stops.length)
-      import com.typesafe.config.ConfigFactory
-      val delays_url_prefix = ConfigFactory.load("application.conf").getString("urls.delays_url_prefix")
+        .head \ "stops" \ "stopId" \ classOf[JInt])
+        .map(_.toInt)
 
-      stops.foreach( id => workerActors ! FetchDelays(delays_url_prefix + id))
+
+    case Delays =>
+      println("Stops size: " + stops.size)
+      stops.foreach(id => workerActors ! FetchDelays(conf.getString("urls.delays_url_prefix") + id))
+
   }
 }

@@ -1,3 +1,5 @@
-case class StartTask(url: String)
+final case object FetchStops
 
-case class FetchDelays(url: String)
+final case object Delays
+
+final case class FetchDelays(url: String)
